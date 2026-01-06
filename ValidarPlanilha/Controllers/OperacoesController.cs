@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ValidarPlanilha.DTOs;
 
 namespace ValidarPlanilha.Controllers
 {
@@ -8,6 +9,7 @@ namespace ValidarPlanilha.Controllers
     public class OperacoesController : ControllerBase
     {
         [HttpPost("upload")]
+
         public IActionResult Upload(IFormFile arquivo)
         {
             if(arquivo == null)
@@ -21,12 +23,16 @@ namespace ValidarPlanilha.Controllers
             {
                 return BadRequest("Arquivo menor do que esperado");
             }
-            return Ok(new 
+            var resposta = new UploadResponseDto
             {
-                dataRecebimento = DateTime.UtcNow,
-                nomeArquivo = arquivo.FileName,
-                tamanho = arquivo.Length
-            });
+                NomeArquivo = arquivo.FileName,
+                DataRecebimento = DateTime.Now,
+                Tamanho = arquivo.Length
+            };
+            return Ok(resposta);
+
+            
+
         }
     }
 }
