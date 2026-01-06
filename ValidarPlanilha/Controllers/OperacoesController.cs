@@ -8,8 +8,15 @@ namespace ValidarPlanilha.Controllers
     [Route("api/operacoes")]
     public class OperacoesController : ControllerBase
     {
-        [HttpPost("upload")]
+        
+        private readonly UploadService _uploadService;
 
+        public OperacoesController()
+        {
+            _uploadService = new UploadService();
+        }
+        
+        [HttpPost("upload")]
         public IActionResult Upload(IFormFile arquivo)
         {
             if(arquivo == null)
@@ -23,15 +30,10 @@ namespace ValidarPlanilha.Controllers
             {
                 return BadRequest("Arquivo menor do que esperado");
             }
-            var resposta = new UploadResponseDto
-            {
-                NomeArquivo = arquivo.FileName,
-                DataRecebimento = DateTime.Now,
-                Tamanho = arquivo.Length
-            };
-            return Ok(resposta);
 
+            var resposta = _uploadService.ProcessarUpload(arquivo);
             
+            return Ok(resposta);
 
         }
     }
